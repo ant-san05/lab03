@@ -1,0 +1,111 @@
+---
+title: "Lab 3 Activity Sheet"
+subtitle: "BEE 4750/5750, Fall 2026"
+format:
+    pdf:
+        geometry:
+            - left=0.5in
+            - right=0.5in
+            - top=1in
+            - bottom=0.75in
+        include-in-header:
+            text: |
+                \usepackage{scrlayer-scrpage}
+                \rohead{\textbf{Name:} \underline{\hspace{3in}}}
+                \usepackage{array}
+                \usepackage{tabularx}
+---
+
+***Name***: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+***NetID***: \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+This sheet covers the written parts of Lab 3 (Mixed Integer Programming and Facility Siting in JuMP). Do the coding in `lab03.ipynb` or `lab03.jl`. If you do not hand in your sheet at the end of class, submit a scanned PDF to Gradescope by **9:00pm on Wednesday, November 11**; you don't need to submit your code. See `lab03.ipynb` or `lab03.pdf` for the full description of the county. Each part can be answered in a sentence or two.
+
+A county's four towns collect organic matter (food scraps and yard waste) every week, and the county will compost all of it. It can build composting sites at three candidate locations, A, B and C. A site that is built has a fixed cost each week and can take up to its capacity, and hauling organic matter from a town to a site costs a set amount per ton.
+
+| Town | Organic Matter (tons/week) | To Site A (\$/ton) | To Site B (\$/ton) | To Site C (\$/ton) |
+|:--|--:|--:|--:|--:|
+| Town 1 | 60 | 5 | 17 | 22 |
+| Town 2 | 140 | 4 | 10 | 18 |
+| Town 3 | 80 | 12 | 6 | 22 |
+| Town 4 | 100 | 22 | 20 | 6 |
+
+| Site | Capacity (tons/week) | Fixed cost (\$/week) |
+|:--|--:|--:|
+| A | 300 | 2,800 |
+| B | 200 | 2,200 |
+| C | 250 | 2,600 |
+
+Let $x_{ij} \geq 0$ be the organic matter hauled from town $i$ to site $j$ (tons/week), and $y_j$ be 1 if site $j$ is built and 0 if not. With $d_i$ the organic matter town $i$ collects, $K_j$ and $F_j$ the capacity and fixed cost of site $j$, and $c_{ij}$ the transport cost, the model is below. In step 1, we will assume that we build every site (every $y_j = 1$).
+
+$$
+\begin{aligned}
+\min_{\mathbf{x}, \mathbf{y}} \quad & \sum_{i} \sum_{j} c_{ij} x_{ij} + \sum_{j} F_j y_j \\
+\text{subject to:} \quad & \sum_{j} x_{ij} = d_i \\
+& \sum_{i} x_{ij} \leq K_j y_j \qquad \text{for each site } j \\
+& x_{ij} \geq 0, \quad y_j \in \{0, 1\}.
+\end{aligned}
+$$
+
+\newpage
+
+## Results
+
+Fill in both tables as you go. In the second, write the site (or sites) that each town's organic matter goes to.
+
+\renewcommand{\arraystretch}{1.8}
+\begin{tabularx}{\textwidth}{@{}|>{\raggedright\arraybackslash}p{1.5in}|*{4}{>{\raggedright\arraybackslash}X|}@{}}
+\hline
+\textbf{Step} & \textbf{$y_A$} & \textbf{$y_B$} & \textbf{$y_C$} & \textbf{Total cost (\$/week)} \\ \hline
+1. Every site built & 1 & 1 & 1 & \\ \hline
+2. Building sites as a decision & & & & \\ \hline
+3. Watershed rule & & & & \\ \hline
+\end{tabularx}
+
+\vspace{0.2in}
+\begin{tabularx}{\textwidth}{@{}|>{\raggedright\arraybackslash}p{1.5in}|*{4}{>{\raggedright\arraybackslash}X|}@{}}
+\hline
+\textbf{Step} & \textbf{Town 1} & \textbf{Town 2} & \textbf{Town 3} & \textbf{Town 4} \\ \hline
+1. Every site built & & & & \\ \hline
+2. Building sites as a decision & & & & \\ \hline
+3. Watershed rule & & & & \\ \hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1}
+
+## Step 2: Let the Model Choose the Sites
+
+Which site(s) are not built? Show that the weekly amount saved compared with Step 1 equals that site's fixed cost minus the additional cost of hauling its town's organic matter somewhere else.
+
+
+\newpage
+
+## Step 3: A Watershed Rule
+
+Sites A and C drain to the same creek, upstream of a drinking-water intake, and the state will permit at most one composting site in that creek's watershed.
+
+**(a)** Write the rule as a constraint on $y_A$, $y_B$ and $y_C$.
+\vspace{0.8in}
+
+**(b)** What is now built? How much does the rule cost the county each week?
+\vspace{0.8in}
+
+## Step 4: Shadow Prices
+
+These are the shadow prices of the Step 3 model, with each $y_j$ fixed at its value in the Step 3 plan.
+
+**(a)** Record the shadow prices, with their signs (for the capacities, in \$/week per ton/week).
+
+\renewcommand{\arraystretch}{1.8}
+\begin{tabularx}{\textwidth}{@{}|*{4}{>{\raggedright\arraybackslash}X|}@{}}
+\hline
+\textbf{Site A capacity} & \textbf{Site B capacity} & \textbf{Site C capacity} & \textbf{Watershed rule} \\ \hline
+ & & & \\ \hline
+\end{tabularx}
+\renewcommand{\arraystretch}{1}
+
+**(b)** Site C is not built in the Step 3 plan. What does the shadow price of its capacity measure?
+\vspace{1.2in}
+
+**(c)** Why does the watershed rule's shadow price differ from what the rule cost the county in Step 3?
+\vspace{1.2in}
